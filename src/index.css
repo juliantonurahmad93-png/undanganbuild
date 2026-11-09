@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+@theme {
+  /* ————— Mawaddah color system (sage emerald × antique gold × warm ivory) ————— */
+  --color-primary: #325346;
+  --color-primary-container: #4a6b5d;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #c6ead8;
+  --color-primary-fixed: #c6ebd9;
+  --color-primary-fixed-dim: #abcebe;
+  --color-on-primary-fixed: #002116;
+  --color-on-primary-fixed-variant: #2d4d40;
+
+  --color-secondary: #775a19;
+  --color-secondary-container: #fed488;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #785a1a;
+  --color-secondary-fixed: #ffdea5;
+  --color-secondary-fixed-dim: #e9c176;
+  --color-on-secondary-fixed: #261900;
+  --color-on-secondary-fixed-variant: #5d4201;
+
+  --color-tertiary: #3b5147;
+  --color-tertiary-container: #52695f;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-fixed: #cfe8dc;
+  --color-tertiary-fixed-dim: #b3ccc0;
+  --color-on-tertiary-fixed: #091f18;
+  --color-on-tertiary-fixed-variant: #354b42;
+
+  --color-background: #fbf9f6;
+  --color-on-background: #1b1c1a;
+  --color-surface: #fbf9f6;
+  --color-surface-dim: #dbdad7;
+  --color-surface-bright: #fbf9f6;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f3f0;
+  --color-surface-container: #efeeeb;
+  --color-surface-container-high: #eae8e5;
+  --color-surface-container-highest: #e4e2df;
+  --color-on-surface: #1b1c1a;
+  --color-on-surface-variant: #414844;
+  --color-surface-variant: #e4e2df;
+
+  --color-outline: #727974;
+  --color-outline-variant: #c1c8c3;
+  --color-inverse-surface: #30312f;
+  --color-inverse-on-surface: #f2f0ed;
+  --color-inverse-primary: #abcebe;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+
+  /* ————— Type scale ————— */
+  --font-headline: "Playfair Display", ui-serif, Georgia, serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Amiri", "Playfair Display", serif;
+
+  --text-headline-xl: 56px;
+  --text-headline-xl--line-height: 64px;
+  --text-headline-lg: 40px;
+  --text-headline-lg--line-height: 48px;
+  --text-headline-md: 28px;
+  --text-headline-md--line-height: 36px;
+  --text-headline-sm: 22px;
+  --text-headline-sm--line-height: 30px;
+
+  --radius-xs: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.75rem;
+
+  --shadow-soft: 0 1px 8px rgba(45, 67, 58, 0.06), 0 12px 40px -12px rgba(45, 67, 58, 0.12);
+  --shadow-lift: 0 2px 10px rgba(50, 83, 70, 0.18);
+  --shadow-phone: 0 40px 90px -24px rgba(38, 53, 47, 0.45), 0 12px 32px -12px rgba(38, 53, 47, 0.3);
+
+  --animate-float-slow: float 7s ease-in-out infinite;
+  --animate-float-slower: float 10s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.6s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(119, 90, 25, 0.28); }
+  70% { box-shadow: 0 0 0 12px rgba(119, 90, 25, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(119, 90, 25, 0); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-on-surface font-body antialiased;
+    overscroll-behavior: none;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-container-highest);
+    border-radius: 8px;
+    border: 3px solid var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-outline-variant);
+  }
+  input, select, textarea, button {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .texture-grain {
+    position: relative;
+  }
+  .texture-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+  .gold-shimmer {
+    background: linear-gradient(
+      110deg,
+      #775a19 20%,
+      #c9a24b 40%,
+      #f3d98b 50%,
+      #c9a24b 60%,
+      #775a19 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 5s linear infinite;
+  }
+  .pattern-geom {
+    background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M32 8 L40 24 L56 32 L40 40 L32 56 L24 40 L8 32 L24 24 Z' fill='none' stroke='%23325346' stroke-opacity='0.10'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%23325346' fill-opacity='0.07'/%3E%3C/svg%3E");
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .font-script {
+    font-family: "Great Vibes", "Amiri", cursive;
+  }
+  .font-noto-sans {
+    font-family: "Noto Sans", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-noto-serif {
+    font-family: "Noto Serif", "Playfair Display", ui-serif, Georgia, serif;
+  }
+  .islami-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #d4af37, transparent);
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  .islami-pattern {
+    background-color: #fdfbf7;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .islami-frame {
+    border: 1px solid #d4af37;
+    outline: 4px double #d4af37;
+    outline-offset: 4px;
+  }
+}

@@ -1,8 +1,9 @@
 ﻿import { createClient, type RealtimeChannel, type User } from "@supabase/supabase-js";
 import { mergeSettings, type InvitationSettingsRow, type InvitationStatus, type StructuredSettings } from "./invitationSettings";
 
-const SUPABASE_URL = "https://vpkyeisjdyupoaeyrguk.supabase.co";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://vpkyeisjdyupoaeyrguk.supabase.co";
 const SUPABASE_ANON_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwa3llaXNqZHl1cG9hZXlyZ3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjcwMjYsImV4cCI6MjEwOTc0MzAyNn0._vrIUD1CWENiniui6JDREr7bcAF-U_qtzKYfFNmAc8M";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

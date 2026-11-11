@@ -89,7 +89,16 @@ export function PublicInvitePage({ slug }: { slug: string }) {
     const next = force ?? !playing; setPlaying(next);
     if (next) void ambient.start((s.audio.mode === "nature" ? 1 : s.audio.mode === "beat" ? 2 : 0) as AudioMode, s.audio.url); else ambient.stop();
   };
-  const openInvite = () => { setCover(false); toggleAudio(true); setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 50); };
+  const openInvite = () => {
+    setCover(false);
+    toggleAudio(true);
+    try {
+      const el = document.documentElement as any;
+      if (!document.fullscreenElement && el?.requestFullscreen) void el.requestFullscreen().catch(() => {});
+      else if (!document.fullscreenElement && el?.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } catch {}
+    setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 50);
+  };
   const copyText = async (text: string, label: string) => { try { await navigator.clipboard.writeText(text); notify(`${label} disalin.`); } catch { notify("Gagal menyalin."); } };
   const submitWish = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); const fd = new FormData(e.currentTarget);
@@ -126,10 +135,10 @@ export function PublicInvitePage({ slug }: { slug: string }) {
   const primaryStyle = { color: theme.primary } as const;
 
   return (
-    <div className={cn("min-h-screen text-white", theme.pageBg)}>
+    <div className={cn("min-h-[100dvh] w-full text-white", theme.pageBg)}>
       {toast && <div className="fixed bottom-4 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-black/75 px-4 py-2 text-[12px] text-white">{toast}</div>}
-      <div className="mx-auto flex min-h-screen max-w-[430px] flex-col md:max-w-[980px] md:flex-row">
-        <aside className="relative hidden w-full overflow-hidden md:sticky md:top-0 md:flex md:h-screen md:w-[52%] md:flex-col md:justify-end md:border-r md:border-white/10">
+      <div className="mx-auto flex min-h-[100dvh] w-full flex-col md:max-w-[980px] md:flex-row">
+        <aside className="relative hidden w-full overflow-hidden md:sticky md:top-0 md:flex md:h-[100dvh] md:w-[52%] md:flex-col md:justify-end md:border-r md:border-white/10">
           <img src={s.hero.coverImageUrl || s.couple.groom.photoUrl || "/images/venue-masjid.jpg"} alt={title} className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,.12),rgba(10,10,10,.68)_55%,rgba(10,10,10,.92))]" />
           <div className={cn("absolute inset-0 opacity-20", patternClass)} />
@@ -155,13 +164,13 @@ export function PublicInvitePage({ slug }: { slug: string }) {
           </div>
         </aside>
 
-        <div className={cn("relative min-h-screen w-full md:h-screen md:w-[48%] md:overflow-y-auto", theme.panelBg)}>
-          <div className="relative min-h-screen w-full bg-[#fdfbf7]">
+        <div className={cn("relative min-h-[100dvh] w-full md:h-[100dvh] md:w-[48%] md:overflow-y-auto", theme.panelBg)}>
+          <div className="relative min-h-[100dvh] w-full bg-[#fdfbf7]">
             <button onClick={() => toggleAudio()} aria-label="Audio" className={cn("fixed right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white/92 shadow-lg md:sticky md:left-auto md:ml-auto md:mr-4 md:top-4")} style={{ color: playing ? theme.accent : theme.primary }}>{playing ? <Pause size={16} /> : <Play size={16} />}</button>
-            <div ref={scrollRef} className={cn("min-h-screen overflow-x-hidden font-noto-sans", patternClass)} style={{ color: theme.text }}>
+            <div ref={scrollRef} className={cn("min-h-[100dvh] overflow-x-hidden font-noto-sans", patternClass)} style={{ color: theme.text }}>
             <AnimatePresence>
               {cover && (
-                <motion.div initial={{ opacity: 1 }} exit={{ opacity: 0, y: -30 }} className={cn("fixed inset-0 z-40 flex min-h-screen flex-col items-center justify-center px-6 py-12 text-center text-white md:left-auto md:right-0 md:w-[48%] md:max-w-none overflow-hidden", theme.coverBg)}>
+                <motion.div initial={{ opacity: 1 }} exit={{ opacity: 0, y: -30 }} className={cn("fixed inset-0 z-40 flex min-h-[100dvh] flex-col items-center justify-center px-6 py-12 text-center text-white md:left-auto md:right-0 md:w-[48%] md:max-w-none overflow-hidden", theme.coverBg)}>
                   {isJawa && (
                     <>
                       <div className="absolute inset-0 opacity-[0.22] jawa-batik-parang pointer-events-none" />

@@ -56,18 +56,38 @@ export async function checkSubdomainAvailable(slug: string): Promise<{ available
   }
 }
 
-export async function fetchWishes(): Promise<{ wishes: Wish[]; source: "supabase" | "local" }> {
-  try { const { data, error } = await supabase.from("wishes").select("*").order("created_at", { ascending: false }).limit(50); if (error) throw error; supabaseHealthy = true; return { wishes: dedupe([...((data as Wish[]) ?? []), ...readLocalWishes()]), source: "supabase" }; }
-  catch { supabaseHealthy = false; return { wishes: dedupe([...readLocalWishes(), ...SEED_WISHES]), source: "local" }; }
+export async function fetchWishes(scope?: { invitationId?: string | null; slug?: string | null }): Promise<{ wishes: Wish[]; source: "supabase" | "local" }> {
+  const invId = (scope?.invitationId || "").trim();
+  const slug = (scope?.slug || "").trim().toLowerCase();
+  const key = invId || slug || "demo";
+  try {
+    let q = supabase.from("wishes").select("*").order("created_at", { ascending: false }).limit(50);
+    if (invId) q = q.eq("invitation_id", invId);
+    else if (slug) q = q.ilike("theme", `${slug}:%`);
+    const { data, error } = await q; if (error) throw error; supabaseHealthy = true;
+    return { wishes: dedupe([...((data as Wish[]) ?? []), ...readLocalWishes(key)]), source: "supabase" };
+  } catch { supabaseHealthy = false; return { wishes: dedupe([...readLocalWishes(key), ...(slug || invId ? [] : SEED_WISHES)]), source: "local" }; }
 }
-export async function insertWish(input: { name: string; presence: string; message: string; theme?: string }): Promise<{ wish: Wish; persisted: "supabase" | "local" }> {
-  const wish: Wish = { id: crypto.randomUUID(), created_at: new Date().toISOString(), name: input.name.trim().slice(0, 60), presence: input.presence, message: input.message.trim().slice(0, 500), theme: input.theme ?? "demo" };
-  try { if (!supabaseHealthy) throw new Error("offline"); const { error } = await supabase.from("wishes").insert(wish); if (error) throw error; return { wish, persisted: "supabase" }; }
-  catch { writeLocalWish(wish); return { wish, persisted: "local" }; }
+export async function insertWish(input: { name: string; presence: string; message: string; theme?: string; invitationId?: string | null; slug?: string | null }): Promise<{ wish: Wish; persisted: "supabase" | "local" }> {
+  const invId = (input.invitationId || "").trim() || null;
+  const slug = (input.slug || "").trim().toLowerCase();
+  const key = invId || slug || "demo";
+  const wish: Wish = { id: crypto.randomUUID(), created_at: new Date().toISOString(), name: input.name.trim().slice(0, 60), presence: input.presence, message: input.message.trim().slice(0, 500), theme: input.theme ?? "demo", invitation_id: invId };
+  try {
+    if (!supabaseHealthy) throw new Error("offline");
+    const payload: any = { id: wish.id, created_at: wish.created_at, name: wish.name, presence: wish.presence, message: wish.message, theme: wish.theme };
+    if (invId) payload.invitation_id = invId;
+    const { error } = await supabase.from("wishes").insert(payload); if (error) throw error; return { wish, persisted: "supabase" };
+  } catch { writeLocalWish(wish, key); return { wish, persisted: "local" }; }
 }
-export function subscribeWishes(onInsert: (wish: Wish) => void): () => void {
+export function subscribeWishes(onInsert: (wish: Wish) => void, scope?: { invitationId?: string | null; slug?: string | null }): () => void {
+  const invId = (scope?.invitationId || "").trim();
+  const slug = (scope?.slug || "").trim().toLowerCase();
   let channel: RealtimeChannel | null = null;
-  try { channel = supabase.channel("bizinvite-wishes").on("postgres_changes", { event: "INSERT", schema: "public", table: "wishes" }, (payload) => onInsert(payload.new as Wish)).subscribe(); } catch {}
+  try {
+    const filter = invId ? `invitation_id=eq.${invId}` : slug ? `theme=ilike.${slug}:%` : undefined;
+    channel = supabase.channel(`bizinvite-wishes-${invId || slug || "demo"}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "wishes", ...(filter ? { filter } : {}) }, (payload) => onInsert(payload.new as Wish)).subscribe();
+  } catch {}
   return () => { if (channel) void supabase.removeChannel(channel!); };
 }
 function dedupe(list: Wish[]): Wish[] { const seen = new Set<string>(); return list.filter((w) => (seen.has(w.id) ? false : (seen.add(w.id), true))); }
@@ -206,7 +226,7 @@ export async function fetchPublishedInvitation(slug: string): Promise<{ row: Inv
     }
     const st = await supabase.rpc("get_invitation_link_status", { p_slug: s });
     const info = Array.isArray(st.data) ? st.data[0] : st.data;
-    if (!st.error && info?.exists) return { row: null, error: info.published ? "schema_drift" : "draft" };
+    if (!st.error && info?.slug_exists) return { row: null, error: info.published ? "schema_drift" : "draft" };
     return { row: null, error: "not_found" };
   } catch (e: any) {
     return { row: null, error: e?.message || String(e) };

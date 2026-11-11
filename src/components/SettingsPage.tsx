@@ -38,7 +38,7 @@ export function SettingsPage() {
       if (!alive) return;
       setSource(res.source);
       if (res.error) setError(`Schema/settings belum tersimpan ke Supabase: ${res.error}. Jalankan supabase/schema.sql (tabel invitation_settings). Fallback lokal aktif.`);
-      const base = res.row ? mergeSettings({ ...res.row.settings, general: { ...(res.row.settings as any)?.general, slug: res.row.slug || (profile as any)?.subdomain || (res.row.settings as any)?.general?.slug || "" } }, res.row.title) : (() => { const d = defaultStructuredSettings(profile?.display_name || user.user_metadata?.display_name || ""); d.general.slug = (profile as any)?.subdomain || d.general.slug; return d; })();
+      const base = res.row ? mergeSettings({ ...res.row.settings, general: { ...(res.row.settings as any)?.general, slug: res.row.slug || (profile as any)?.subdomain || (res.row.settings as any)?.general?.slug || "", themeId: res.row.theme_id || (res.row.settings as any)?.general?.themeId || "islami-emerald" } }, res.row.title) : (() => { const d = defaultStructuredSettings(profile?.display_name || user.user_metadata?.display_name || ""); d.general.slug = (profile as any)?.subdomain || d.general.slug; return d; })();
       setSettings(base); setRow(res.row ?? null); setLoading(false);
     });
     return () => { alive = false; };

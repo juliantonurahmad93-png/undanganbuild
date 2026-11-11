@@ -245,7 +245,7 @@ on conflict (id) do update set role='admin', status='approved';
 
 -- ========== Public slug status (safe, bypasses RLS for existence check only) ==========
 create or replace function public.get_invitation_link_status(p_slug text)
-returns table(exists boolean, published boolean)
+returns table(slug_exists boolean, published boolean)
 language plpgsql
 security definer
 set search_path = public
@@ -253,12 +253,12 @@ as $$
 declare s text := public.normalize_slug(p_slug);
 begin
   return query
-  select true, (i.status = 'published')
+  select true as slug_exists, (i.status = 'published') as published
   from public.invitation_settings i
   where i.slug = s
   limit 1;
   if not found then
-    return query select false, false;
+    return query select false as slug_exists, false as published;
   end if;
 end;
 $$;

@@ -19,7 +19,7 @@ export function Hero() {
   return (
     <section
       id="beranda"
-      className="relative mx-auto w-full max-w-[1360px] overflow-visible px-5 pb-20 pt-10 md:px-8 md:pt-14"
+      className="relative mx-auto w-full max-w-[1360px] overflow-hidden px-4 pb-20 pt-10 sm:px-5 md:overflow-visible md:px-8 md:pt-14"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         mx.set((e.clientX - r.left) / r.width - 0.5);
@@ -41,7 +41,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="font-headline text-[44px] leading-[52px] tracking-[-0.015em] text-primary md:text-[64px] md:leading-[72px]">
+            <h1 className="font-headline text-[36px] leading-[44px] tracking-[-0.015em] text-primary sm:text-[44px] sm:leading-[52px] md:text-[64px] md:leading-[72px]">
               Buat undangan digital profesional dengan <span className="italic text-secondary">Skatim Invitation</span>
             </h1>
           </Reveal>

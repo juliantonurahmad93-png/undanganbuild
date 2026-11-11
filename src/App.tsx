@@ -22,7 +22,7 @@ function AppShell() {
   if (inviteSlug) return <PublicInvitePage slug={inviteSlug} />;
 
   return (
-    <div className="min-h-screen bg-background text-on-surface">
+    <div className="min-h-screen overflow-x-clip bg-background text-on-surface">
       <Header />
       {view === "admin" ? <AdminPanel /> : view === "settings" ? <SettingsPage /> : view === "pending" ? <PendingApproval /> : (
         <>

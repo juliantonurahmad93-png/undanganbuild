@@ -96,11 +96,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-on-surface font-body antialiased;
     overscroll-behavior: none;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
   }
   ::selection {
     background: var(--color-primary-fixed);

@@ -130,6 +130,24 @@ export async function fetchAllProfiles(): Promise<{ profiles: Profile[]; source:
   if (error) return { profiles: [], source: "local", error: error.message };
   return { profiles: (data as Profile[]) ?? [], source: "supabase" };
 }
+
+export async function fetchAllInvitations(): Promise<{ invitations: InvitationSettingsRow[]; error?: string }> {
+  const { data, error } = await supabase.from("invitation_settings").select("*").order("updated_at", { ascending: false }).limit(300);
+  if (error) return { invitations: [], error: error.message };
+  return { invitations: ((data as any[]) || []).map((r) => normalizeInvitationRow(r)) };
+}
+
+export async function saveInvitationShareImage(invitationId: string, ogImageUrl: string): Promise<{ ok: boolean; error?: string }> {
+  const url = (ogImageUrl || "").trim();
+  const { data, error } = await supabase.from("invitation_settings").select("id,settings").eq("id", invitationId).maybeSingle();
+  if (error) return { ok: false, error: error.message };
+  if (!data) return { ok: false, error: "Undangan tidak ditemukan." };
+  const settings = mergeSettings(data.settings, "");
+  settings.share = { ...settings.share, ogImageUrl: url };
+  const { error: uerr } = await supabase.from("invitation_settings").update({ settings }).eq("id", invitationId);
+  if (uerr) return { ok: false, error: uerr.message };
+  return { ok: true };
+}
 export async function updateProfileStatus(id: string, status: AccountStatus, approvedBy?: string): Promise<{ ok: boolean; message?: string }> {
   const patch = { status, approved_at: status === "approved" ? new Date().toISOString() : null, approved_by: approvedBy ?? null };
   const { error, data } = await supabase.from("profiles").update(patch).eq("id", id).select("id,status");

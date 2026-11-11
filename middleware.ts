@@ -69,7 +69,7 @@ export default async function middleware(request: Request): Promise<Response | v
     const pair = g && b ? `${g} & ${b}` : g || b || "";
     const titleText = String(row.title || settings?.general?.title || pair || "Undangan Digital").trim();
     const descText = String(pair ? `Undangan pernikahan ${pair}. Buka untuk melihat detail acara.` : `Undangan digital ${titleText}.`).trim();
-    const image = settings?.hero?.coverImageUrl || couple?.groom?.photoUrl || couple?.bride?.photoUrl || "/images/venue-masjid.jpg";
+    const image = settings?.share?.ogImageUrl || settings?.hero?.coverImageUrl || couple?.groom?.photoUrl || couple?.bride?.photoUrl || "/images/venue-masjid.jpg";
     const imageUrl = /^https?:\/\//i.test(String(image)) ? String(image) : new URL(String(image || "/images/venue-masjid.jpg"), url.origin).toString();
     const pageUrl = new URL(url.pathname, url.origin).toString();
 

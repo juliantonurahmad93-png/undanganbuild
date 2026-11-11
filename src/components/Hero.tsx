@@ -19,7 +19,7 @@ export function Hero() {
   return (
     <section
       id="beranda"
-      className="relative mx-auto w-full max-w-[1360px] overflow-hidden px-4 pb-20 pt-10 sm:px-5 md:overflow-visible md:px-8 md:pt-14"
+      className="relative mx-auto w-full max-w-[1360px] scroll-mt-24 overflow-hidden px-4 pb-20 pt-10 sm:px-5 md:overflow-visible md:px-8 md:pt-14"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         mx.set((e.clientX - r.left) / r.width - 0.5);

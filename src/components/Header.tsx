@@ -24,18 +24,22 @@ export function Header() {
 
   const handleSignOut = async () => { await logout(); toast("Anda telah keluar."); };
   const scrollTo = (href: string) => {
-    const doScroll = () => {
-      const el = document.querySelector(href) as HTMLElement | null;
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
     setMenuOpen(false);
+    const id = href.replace("#", "");
+    const run = () => {
+      const el = document.getElementById(id) as HTMLElement | null;
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 88;
+        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+      }
+      if (window.location.hash !== href) window.history.replaceState(null, "", href);
+    };
     if (view !== "landing") {
       setView("landing");
       if (window.location.pathname !== "/" && window.location.pathname !== "/index.html") window.history.replaceState({}, "", "/");
-      window.setTimeout(doScroll, 350);
+      window.setTimeout(run, 380);
     } else {
-      window.setTimeout(doScroll, 350);
+      window.setTimeout(run, 380);
     }
   };
 

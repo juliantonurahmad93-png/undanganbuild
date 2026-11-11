@@ -89,7 +89,7 @@ export function RegisterModal() {
       <div className="p-6 pb-2 pr-14 sm:p-7 sm:pb-2 md:p-8 md:pb-2">
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Mulai</span>
         <h3 className="mt-0.5 font-headline text-[24px] text-primary">Daftar Akun Skatim Invitation</h3>
-        <p className="mt-1 text-[12px] text-on-surface-variant">Pendaftaran aman via Supabase Auth. Masukkan alamat link undangan sekarang — hanya bisa dipakai sekali saat daftar dan tidak bisa diganti setelah terdaftar (contoh: domain.com/raka-nanda). Akses setting tetap memerlukan persetujuan admin.</p>
+        <p className="mt-1 text-[12px] text-on-surface-variant">Masukkan alamat link undangan sekarang — hanya bisa dipakai sekali saat daftar dan tidak bisa diganti setelah terdaftar (contoh: domain.com/raka-nanda). Akses setting tetap memerlukan persetujuan admin.</p>
       </div>
       <form onSubmit={submit} className="space-y-3.5 p-6 pt-4 sm:p-7 sm:pt-4 md:p-8 md:pt-4">
         {registerPreset && <div className="flex items-center justify-between rounded-md bg-primary/10 px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary"><span>Terpilih: <strong className="text-secondary">{registerPreset}</strong></span><Check size={14} /></div>}

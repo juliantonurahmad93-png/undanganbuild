@@ -9,6 +9,7 @@ export type StructuredSettings = {
     bride: { name: string; father: string; mother: string; childOrder: string; photoUrl: string; instagram: string };
   };
   hero: { openingText: string; guestLabelEnabled: boolean; coverImageUrl: string };
+  share: { ogImageUrl: string };
   event: {
     dateDisplay: string;
     countdownIso: string;
@@ -57,6 +58,7 @@ export function defaultStructuredSettings(nameHint = ""): StructuredSettings {
       bride: { name: brideName || "Aisyah Putri", father: "Bpk. Fulan", mother: "Ibu Fulanah", childOrder: "Putri", photoUrl: "/images/bride.jpg", instagram: "" },
     },
     hero: { openingText: "The Wedding of", guestLabelEnabled: true, coverImageUrl: "/images/venue-masjid.jpg" },
+    share: { ogImageUrl: "" },
     event: {
       dateDisplay,
       countdownIso: dateIso,

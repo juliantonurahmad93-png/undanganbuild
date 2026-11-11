@@ -14,7 +14,7 @@ export function Pricing() {
           <h2 className="mt-2 font-headline text-[32px] font-medium leading-[40px] text-primary md:text-[40px] md:leading-[48px]">Pilih paket sesuai kebutuhan</h2>
           <p className="mt-3 text-[15px] leading-6 text-on-surface-variant">Transparan dan mudah dipahami. Cocok untuk uji coba, acara personal, atau kebutuhan bisnis.</p>
         </Reveal>
-        <div className="grid grid-cols-1 items-stretch gap-6 pt-4 md:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-stretch gap-6 pt-4 md:grid-cols-2">
           {PLANS.map((plan, i) => (
             <Reveal key={plan.id} delay={i * 0.1} className="h-full">
               <div className={cn("relative flex h-full flex-col rounded-xl bg-surface-container-lowest p-7 transition-shadow duration-300", plan.featured ? "shadow-lift ring-2 ring-secondary" : "shadow-sm hover:shadow-md")}>

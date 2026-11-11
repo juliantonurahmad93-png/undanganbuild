@@ -105,26 +105,10 @@ export const FAQS = [
 
 export const PLANS = [
   {
-    id: "starter",
-    label: "Uji Coba",
-    name: "Paket Starter",
-    price: "Gratis",
-    suffix: "/ 3 hari uji coba",
-    desc: "Coba builder, pratinjau tema, dan alur undangan dasar.",
-    features: [
-      { ok: true, text: "Akses beberapa tema dasar" },
-      { ok: true, text: "Hitung mundur acara" },
-      { ok: true, text: "Peta lokasi sederhana" },
-      { ok: false, text: "Domain personal / RSVP penuh" },
-    ],
-    cta: "Daftar & Coba",
-    featured: false,
-  },
-  {
     id: "pro",
     label: "Paling Dipilih",
     name: "Paket Pro",
-    price: "Rp 149.000",
+    price: "Rp 30.000",
     suffix: "/ sekali bayar",
     desc: "Fitur lengkap untuk undangan aktif dengan RSVP dan amplop digital.",
     features: [
@@ -141,7 +125,7 @@ export const PLANS = [
     id: "business",
     label: "Untuk Kebutuhan Bisnis",
     name: "Paket Business",
-    price: "Rp 249.000",
+    price: "Rp 70.000",
     suffix: "/ sekali bayar",
     desc: "Untuk event skala besar dengan dukungan tambahan.",
     features: [

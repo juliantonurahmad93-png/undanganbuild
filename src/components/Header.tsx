@@ -8,7 +8,7 @@ import { cn } from "../utils/cn";
 const NAV = [{ label: "Beranda", href: "#beranda" }, { label: "Tema", href: "#tema" }, { label: "Fitur", href: "#fitur" }, { label: "Harga", href: "#harga" }, { label: "Demo", href: "#tema" }];
 
 export function Header() {
-  const { openLogin, openRegister, user, isAdmin, toast, openAdmin, openSettings, view, logout } = useUi();
+  const { openLogin, openRegister, user, isAdmin, toast, openAdmin, openSettings, view, setView, logout } = useUi();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("#beranda");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,6 +23,15 @@ export function Header() {
   }, [view]);
 
   const handleSignOut = async () => { await logout(); toast("Anda telah keluar."); };
+  const scrollTo = (href: string) => {
+    setMenuOpen(false);
+    const doScroll = () => { const el = document.querySelector(href); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+    if (view !== "landing") {
+      setView("landing");
+      if (window.location.pathname !== "/" && window.location.pathname !== "/index.html") window.history.replaceState({}, "", "/");
+      window.setTimeout(doScroll, 80);
+    } else { doScroll(); }
+  };
 
   return (
     <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-500", scrolled ? "bg-surface/85 shadow-[0_1px_8px_rgba(45,67,58,0.05),0_12px_32px_-16px_rgba(45,67,58,0.18)] backdrop-blur-xl" : "bg-transparent")}>
@@ -31,7 +40,7 @@ export function Header() {
           <LogoMark className="h-8 w-8 shrink-0 transition-transform duration-500 group-hover:rotate-6 sm:h-9 sm:w-9" />
           <span className="flex min-w-0 flex-col"><span className="truncate font-headline text-[18px] leading-5 tracking-tight text-primary sm:text-[22px] sm:leading-6">Skatim Invitation</span><span className="-mt-0.5 hidden text-[9px] font-semibold uppercase tracking-[0.2em] text-secondary sm:block">Digital Invitation Platform</span></span>
         </button>
-        {view === "landing" && <nav className="hidden items-center gap-7 lg:flex">{NAV.map((item) => (<a key={item.href} href={item.href} className={cn("relative text-[13.5px] font-medium tracking-wide transition-colors", active === item.href ? "font-bold text-primary" : "text-on-surface-variant hover:text-on-surface")}>{item.label}<span className={cn("absolute -bottom-2 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-secondary transition-all duration-300", active === item.href ? "w-5 opacity-100" : "w-0 opacity-0")} /></a>))}</nav>}
+        {view === "landing" && <nav className="hidden items-center gap-7 lg:flex">{NAV.map((item) => (<a key={item.href} href={item.href} onClick={(e) => { e.preventDefault(); scrollTo(item.href); }} className={cn("relative text-[13.5px] font-medium tracking-wide transition-colors", active === item.href ? "font-bold text-primary" : "text-on-surface-variant hover:text-on-surface")}>{item.label}<span className={cn("absolute -bottom-2 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-secondary transition-all duration-300", active === item.href ? "w-5 opacity-100" : "w-0 opacity-0")} /></a>))}</nav>}
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           {user && !isAdmin && <button onClick={openSettings} className="hidden items-center gap-1.5 rounded-md bg-surface-container px-4 py-2 text-[12px] font-semibold tracking-wide text-primary transition hover:bg-surface-container-high sm:inline-flex"><Settings2 size={14}/>Setting</button>}
           {isAdmin && <button onClick={openAdmin} className="inline-flex items-center gap-1.5 rounded-md bg-secondary/15 px-2.5 py-2 text-[11px] font-semibold tracking-wide text-secondary transition hover:bg-secondary/25 sm:px-4 sm:text-[12px]"><LayoutDashboard size={14}/><span className="hidden sm:inline">Panel Admin</span><span className="sm:hidden">Admin</span></button>}
@@ -45,7 +54,7 @@ export function Header() {
         {menuOpen && (
           <motion.nav initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden border-t border-surface-container-high bg-surface/95 backdrop-blur-xl lg:hidden">
             <div className="flex flex-col gap-1 px-6 py-4">
-              {NAV.map((item) => (<a key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className={cn("rounded-lg px-3 py-2.5 text-sm font-medium transition", active === item.href ? "bg-primary/10 font-bold text-primary" : "text-on-surface-variant hover:bg-surface-container")}>{item.label}</a>))}
+              {NAV.map((item) => (<a key={item.href} href={item.href} onClick={(e) => { e.preventDefault(); scrollTo(item.href); }} className={cn("rounded-lg px-3 py-2.5 text-sm font-medium transition", active === item.href ? "bg-primary/10 font-bold text-primary" : "text-on-surface-variant hover:bg-surface-container")}>{item.label}</a>))}
               {user && !isAdmin && <button onClick={() => { setMenuOpen(false); openSettings(); }} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-primary">Setting</button>}
               {isAdmin && <button onClick={() => { setMenuOpen(false); openAdmin(); }} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-secondary">Panel Admin</button>}
               <button onClick={() => { setMenuOpen(false); user ? void handleSignOut() : openLogin(); }} className="mt-1 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-primary">{user ? "Keluar" : "Masuk ke Akun"}</button>

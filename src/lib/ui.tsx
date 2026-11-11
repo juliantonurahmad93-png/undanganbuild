@@ -75,8 +75,11 @@ export function UiProvider({ children }: { children: ReactNode }) {
     if ((view as AppView) === "invite") return; if (view === "admin" && user && !isAdmin) setView("landing");
     if (view === "settings" && user && !isApproved) setView("pending");
     if (view === "pending" && user && isApproved) setView("settings");
-    if ((view as AppView) === "invite") return; const hash = view === "landing" ? "" : view;
-    if (window.location.hash.replace('#','') !== hash) window.location.hash = hash;
+    if ((view as AppView) === "invite") return;
+    const cur = window.location.hash.replace('#','');
+    const viewHashes = ["admin","settings","pending"];
+    if (view !== "landing") { if (cur !== view) window.location.hash = view; }
+    else if (viewHashes.includes(cur)) { window.location.hash = ""; }
   }, [view, user, isAdmin, isApproved]);
 
   const openRegister = useCallback((preset?: string) => { setRegisterPreset(preset ?? null); setModal("register"); }, []);

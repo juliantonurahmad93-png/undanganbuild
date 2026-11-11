@@ -72,24 +72,24 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.32} className="w-full">
-            <div className="grid w-full max-w-xl grid-cols-3 gap-3 rounded-xl bg-surface-container-low/80 p-4 shadow-sm ring-1 ring-surface-container">
-              <div className="flex flex-col">
-                <span className="font-headline text-[24px] font-semibold leading-8 text-primary tabular">Multi-Tema</span>
-                <span className="text-[12px] leading-5 text-on-surface-variant">Islami, Modern, Adat</span>
+            <div className="grid w-full max-w-xl grid-cols-3 gap-2 rounded-xl bg-surface-container-low/80 p-3 shadow-sm ring-1 ring-surface-container sm:gap-3 sm:p-4">
+              <div className="flex min-w-0 flex-col items-center text-center">
+                <span className="font-headline text-[18px] font-semibold leading-6 text-primary sm:text-[22px] sm:leading-7">Multi-Tema</span>
+                <span className="mt-0.5 text-[10px] leading-4 text-on-surface-variant sm:text-[12px] sm:leading-5">Islami, Modern, Adat</span>
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1 text-secondary">
-                  <span className="font-headline text-[24px] font-semibold leading-8 tabular">4.9</span>
-                  <Star size={14} fill="currentColor" />
+              <div className="flex min-w-0 flex-col items-center border-x border-surface-container-high/60 px-1 text-center">
+                <div className="flex items-center justify-center gap-1 text-secondary">
+                  <span className="font-headline text-[18px] font-semibold leading-6 tabular sm:text-[22px] sm:leading-7">4.9</span>
+                  <Star size={13} fill="currentColor" />
                 </div>
-                <span className="text-[12px] leading-5 text-on-surface-variant">Rating pengguna</span>
+                <span className="mt-0.5 text-[10px] leading-4 text-on-surface-variant sm:text-[12px] sm:leading-5">Rating pengguna</span>
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-primary">
-                  <BadgeCheck size={16} className="text-secondary" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.12em]">Realtime</span>
+              <div className="flex min-w-0 flex-col items-center text-center">
+                <div className="flex items-center justify-center gap-1 text-primary">
+                  <BadgeCheck size={14} className="shrink-0 text-secondary" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.08em] sm:text-[11px]">Realtime</span>
                 </div>
-                <span className="text-[12px] leading-5 text-on-surface-variant">RSVP & ucapan</span>
+                <span className="mt-0.5 text-[10px] leading-4 text-on-surface-variant sm:text-[12px] sm:leading-5">RSVP & ucapan</span>
               </div>
             </div>
           </Reveal>

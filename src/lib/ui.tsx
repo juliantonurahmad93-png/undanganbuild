@@ -62,6 +62,12 @@ export function UiProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, [refreshProfile, loadProfile]);
 
+  const toast = useCallback((message: string, ok = true) => {
+    if (timer.current) clearTimeout(timer.current);
+    setToastState({ id: Date.now(), message, ok });
+    timer.current = setTimeout(() => setToastState(null), 3800);
+  }, []);
+
   const isAdmin = useMemo(() => computeIsAdmin(user, profile), [user, profile]);
   const isApproved = useMemo(() => isAdmin || profile?.status === "approved", [isAdmin, profile]);
 
@@ -72,12 +78,6 @@ export function UiProvider({ children }: { children: ReactNode }) {
     if ((view as AppView) === "invite") return; const hash = view === "landing" ? "" : view;
     if (window.location.hash.replace('#','') !== hash) window.location.hash = hash;
   }, [view, user, isAdmin, isApproved]);
-
-  const toast = useCallback((message: string, ok = true) => {
-    if (timer.current) clearTimeout(timer.current);
-    setToastState({ id: Date.now(), message, ok });
-    timer.current = setTimeout(() => setToastState(null), 3800);
-  }, []);
 
   const openRegister = useCallback((preset?: string) => { setRegisterPreset(preset ?? null); setModal("register"); }, []);
   const openLanding = useCallback(() => { setView("landing"); if (window.location.pathname !== "/" && window.location.pathname !== "/index.html") window.history.replaceState({}, "", "/"); window.location.hash = ""; }, []);

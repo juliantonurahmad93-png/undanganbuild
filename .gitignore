@@ -55,3 +55,8 @@ coverage/
 # Misc
 *.pem
 *.key
+
+# Uploaded media (server lokal/hosting) — simpan URL di Supabase, bukan file/symlink di repo
+public/uploads/*
+!public/uploads/.gitkeep
+!public/uploads/.htaccess

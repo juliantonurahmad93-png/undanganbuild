@@ -1,4 +1,4 @@
-ï»¿import { BadgeCheck, Globe, Heart, Mail, MessageCircle } from "lucide-react";
+import { BadgeCheck, Globe, Heart, Mail, MessageCircle } from "lucide-react";
 import { LogoMark } from "./ui/Ornament";
 import { useUi } from "../lib/ui";
 
@@ -14,14 +14,14 @@ export function Footer() {
           <div className="md:col-span-5">
             <div className="mb-3 flex items-center gap-2.5">
               <LogoMark />
-              <span className="font-headline text-[22px] text-primary">Biz Invite</span>
+              <span className="font-headline text-[22px] text-primary">Skatim Invitation</span>
             </div>
             <p className="mb-5 max-w-sm text-[13.5px] leading-6 text-on-surface-variant">
               Platform undangan digital multi-tema untuk pernikahan dan acara. Tersedia demo Islami, Modern, Adat Jawa, Adat Sunda, Adat Lampung, dan lainnya.
             </p>
             <div className="inline-flex items-center gap-2 rounded-lg bg-surface-container px-3.5 py-2">
               <BadgeCheck size={15} className="text-secondary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">Mudah â€¢ Cepat â€¢ Realtime</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">Mudah • Cepat • Realtime</span>
             </div>
             <div className="mt-6 flex items-center gap-2">
               {[Globe, MessageCircle, Mail].map((Icon, i) => (
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-3 border-t border-surface-container pt-6 md:flex-row">
-          <p className="text-[12.5px] text-on-surface-variant">Â© {year} Biz Invite. Dibuat untuk kebutuhan undangan digital<Heart size={11} className="mx-1 inline text-secondary" fill="currentColor" />multi-tema.</p>
+          <p className="text-[12.5px] text-on-surface-variant">© {year} Skatim Invitation. Dibuat untuk kebutuhan undangan digital<Heart size={11} className="mx-1 inline text-secondary" fill="currentColor" />multi-tema.</p>
         </div>
       </div>
     </footer>

@@ -304,7 +304,7 @@ export function LiveDemoModal() {
                 <h3 className="font-script text-[46px]" style={{ color: theme.accent }}>Rizky &amp; Aisyah</h3>
                 <p className="mx-auto mt-3 max-w-[300px] text-[11.5px] leading-6" style={{ color: isJawa ? "#5c4033" : "rgba(255,255,255,0.9)" }}>{isJawa ? "Kanthi agunging panuwun, kawula ngaturaken matur nuwun awit rawuh lan donga pangestunipun panjenengan." : "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."}</p>
                 <p className="mt-5 font-noto-serif text-[13px] leading-6 font-medium" style={{ color: isJawa ? "#5c4033" : theme.accentSoft }}>{isJawa ? "Mugi pinaringan berkah rahayu selaminipun" : "Wassalamu’alaikum Warahmatullahi Wabarakatuh"}</p>
-                <p className="mt-8 text-[9px] uppercase tracking-[0.2em] text-white/35">Biz Invite Demo • {isJawa ? "Tema Adat Jawa" : "Tema Islami"}</p>
+                <p className="mt-8 text-[9px] uppercase tracking-[0.2em] text-white/35">Skatim Invitation Demo • {isJawa ? "Tema Adat Jawa" : "Tema Islami"}</p>
               </footer>
 
               <AnimatePresence>

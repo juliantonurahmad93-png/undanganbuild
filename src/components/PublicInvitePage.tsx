@@ -118,7 +118,7 @@ export function PublicInvitePage({ slug }: { slug: string }) {
         <div className="max-w-md rounded-2xl bg-surface-container-low p-8 shadow-sm">
           <h1 className="font-headline text-[28px] text-primary">{draft ? "Undangan Belum Dipublikasikan" : "Undangan Tidak Ditemukan"}</h1>
           <p className="mt-3 text-[14px] leading-7 text-on-surface-variant">
-            {draft ? <>Alamat <strong>/{slug}</strong> sudah terdaftar, tetapi status undangan masih <strong>draft</strong>. Masuk ke Setting → ubah Status ke <strong>Published</strong> → Simpan ke Supabase, lalu buka link lagi.</>
+            {draft ? <>Alamat <strong>/{slug}</strong> sudah terdaftar, tetapi status undangan masih <strong>draft</strong>. Masuk ke Setting ? ubah Status ke <strong>Published</strong> ? Simpan ke Supabase, lalu buka link lagi.</>
               : drift ? <>Alamat <strong>/{slug}</strong> terdeteksi tetapi data undangan belum dapat ditampilkan. Jalankan <code>supabase/schema.sql</code> terbaru dan pastikan status <strong>Published</strong>.</>
               : <>Alamat <strong>/{slug}</strong> tidak ditemukan. Pastikan <code>supabase/schema.sql</code> terbaru sudah dijalankan, slug ada di <code>public.invitation_settings.slug</code> (atau terhubung via <code>profiles.subdomain</code>), dan status <strong>Published</strong>. Coba juga <code>?invite={slug}</code>.</>}
           </p>
@@ -160,7 +160,7 @@ export function PublicInvitePage({ slug }: { slug: string }) {
             <div className={cn("mt-5 h-px w-36", isJawa ? "bg-gradient-to-r from-[#c89b3c] to-transparent" : "bg-gradient-to-r from-[#d4af37] to-transparent")} />
             <p className="mt-5 font-noto-serif text-[20px] text-white/92">{s.event.dateDisplay}</p>
             <p className="mt-3 max-w-md text-[13px] leading-6 text-white/70">Kepada Yth. <span className="font-semibold text-white">{guest}</span></p>
-            <p className="mt-8 text-[10px] uppercase tracking-[0.22em] text-white/35">Biz Invite • /{slug}</p>
+            <p className="mt-8 text-[10px] uppercase tracking-[0.22em] text-white/35">Skatim Invitation • /{slug}</p>
           </div>
         </aside>
 
@@ -294,7 +294,7 @@ export function PublicInvitePage({ slug }: { slug: string }) {
               <h3 className="font-script text-[46px]" style={{ color: isJawa ? theme.primary : theme.accent }}>{title}</h3>
               <p className="mx-auto mt-3 max-w-[300px] text-[11.5px] leading-6" style={{ color: isJawa ? "#5c4033" : "rgba(255,255,255,0.8)" }}>{closing}</p>
               {isJawa && <p className="mt-3 text-[12px] tracking-[0.08em] font-medium" style={{ color: "#5c4033" }}>Mugi pinaringan berkah rahayu selaminipun</p>}
-              <p className="mt-8 text-[9px] uppercase tracking-[0.2em]" style={{ color: isJawa ? "#5c4033" : "rgba(255,255,255,0.35)" }}>Biz Invite • /{slug}</p>
+              <p className="mt-8 text-[9px] uppercase tracking-[0.2em]" style={{ color: isJawa ? "#5c4033" : "rgba(255,255,255,0.35)" }}>Skatim Invitation • /{slug}</p>
             </footer>
 
             <AnimatePresence>{selected !== null && showImages[selected] && (

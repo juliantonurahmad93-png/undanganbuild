@@ -1,4 +1,4 @@
-﻿import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, BadgeCheck, Lock, LogIn, PlayCircle, Sparkles, Star } from "lucide-react";
 import { useUi } from "../lib/ui";
 import { CountdownPills } from "./ui/Countdown";
@@ -42,7 +42,7 @@ export function Hero() {
 
           <Reveal delay={0.08}>
             <h1 className="font-headline text-[44px] leading-[52px] tracking-[-0.015em] text-primary md:text-[64px] md:leading-[72px]">
-              Buat undangan digital profesional dengan <span className="italic text-secondary">Biz Invite</span>
+              Buat undangan digital profesional dengan <span className="italic text-secondary">Skatim Invitation</span>
             </h1>
           </Reveal>
 

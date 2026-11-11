@@ -111,6 +111,7 @@ export function sectionList() {
     { key: "content", label: "Konten & Ayat" },
     { key: "gallery", label: "Galeri" },
     { key: "rsvp", label: "RSVP" },
+    { key: "inbox", label: "Ucapan Masuk" },
     { key: "gift", label: "Amplop Digital" },
     { key: "audio", label: "Audio" },
     { key: "privacy", label: "Privasi" },

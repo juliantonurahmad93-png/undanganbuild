@@ -86,8 +86,8 @@ export const THEME_FILTERS = [
 
 export const FAQS = [
   {
-    q: "Apakah Biz Invite mendukung tema adat dan Islami?",
-    a: "Ya. Biz Invite menyediakan tema Islami, Modern, Adat Jawa, Adat Sunda, Adat Lampung, Adat Minang, dan dapat dikembangkan sesuai kebutuhan.",
+    q: "Apakah Skatim Invitation mendukung tema adat dan Islami?",
+    a: "Ya. Skatim Invitation menyediakan tema Islami, Modern, Adat Jawa, Adat Sunda, Adat Lampung, Adat Minang, dan dapat dikembangkan sesuai kebutuhan.",
   },
   {
     q: "Bisakah foto mempelai disembunyikan untuk privasi?",
@@ -155,5 +155,7 @@ export const PLANS = [
   },
 ];
 
-export const ADMIN_EMAILS = ["juliantonurahmad93@gmail.com", "bizinvite.admin@gmail.com", "admin@bizinvite.id"];
+export const ADMIN_EMAILS = ["juliantonurahmad93@gmail.com", "admin@skatiminvitation.id", "info@skatiminvitation.id"];
 // Admin: kelola di Supabase Auth + profiles.role/status (jangan simpan password di kode).
+// Nomor WhatsApp admin untuk permohonan approve dapat diubah di Panel Admin (app_settings.admin_wa).
+export const DEFAULT_ADMIN_WA = "6281234567890";

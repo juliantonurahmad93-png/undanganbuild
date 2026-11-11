@@ -11,12 +11,11 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   realtime: { params: { eventsPerSecond: 5 } },
 });
 
-export type Wish = { id: string; created_at: string; name: string; presence: string; message: string; theme: string };
-export type Lead = { couple_names: string; whatsapp: string; email: string; plan: string; akad_month: string; theme?: string | null; subdomain?: string | null };
+export type Wish = { id: string; created_at: string; name: string; presence: string; message: string; theme: string; invitation_id?: string | null };
 export type AccountStatus = "pending" | "approved" | "rejected";
 export type Profile = { id: string; email?: string | null; display_name?: string | null; subdomain?: string | null; role?: string | null; status: AccountStatus; created_at?: string; approved_at?: string | null; approved_by?: string | null };
 
-const LOCAL_WISHES_KEY = "bizinvite.localWishes.v1";
+const LOCAL_WISHES_KEY = "skatiminvitation.localWishes.v1";
 export const SEED_WISHES: Wish[] = [
   { id: "seed-1", created_at: new Date(Date.now() - 1000 * 60 * 42).toISOString(), name: "Keluarga Besar Hartono", presence: "Hadir", message: "Selamat menempuh hidup baru. Semoga acaranya lancar dan penuh kebahagiaan.", theme: "demo" },
   { id: "seed-2", created_at: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), name: "Rekan Kerja", presence: "Hadir", message: "Bahagia selalu untuk kedua mempelai. Sukses untuk hari istimewanya!", theme: "demo" },
@@ -86,15 +85,11 @@ export function subscribeWishes(onInsert: (wish: Wish) => void, scope?: { invita
   let channel: RealtimeChannel | null = null;
   try {
     const filter = invId ? `invitation_id=eq.${invId}` : slug ? `theme=ilike.${slug}:%` : undefined;
-    channel = supabase.channel(`bizinvite-wishes-${invId || slug || "demo"}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "wishes", ...(filter ? { filter } : {}) }, (payload) => onInsert(payload.new as Wish)).subscribe();
+    channel = supabase.channel(`skatiminvitation-wishes-${invId || slug || "demo"}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "wishes", ...(filter ? { filter } : {}) }, (payload) => onInsert(payload.new as Wish)).subscribe();
   } catch {}
   return () => { if (channel) void supabase.removeChannel(channel!); };
 }
 function dedupe(list: Wish[]): Wish[] { const seen = new Set<string>(); return list.filter((w) => (seen.has(w.id) ? false : (seen.add(w.id), true))); }
-export async function submitLead(lead: Lead): Promise<"supabase" | "local"> {
-  try { if (!supabaseHealthy) throw new Error("offline"); const { error } = await supabase.from("leads").insert(lead); if (error) throw error; return "supabase"; }
-  catch { const arr = readLocal<any[]>("bizinvite.leads.v1", []); writeLocal("bizinvite.leads.v1", [{ ...lead, created_at: new Date().toISOString() }, ...arr].slice(0, 30)); return "local"; }
-}
 
 export async function signInAccount(email: string, password: string) {
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
@@ -150,10 +145,10 @@ export async function fetchMyInvitation(userId: string, _hint = ""): Promise<{ r
     const { data, error } = await supabase.from("invitation_settings").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1).maybeSingle();
     if (error) throw error;
     if (data) return { row: normalizeInvitationRow(data as any), source: "supabase" };
-    const local = readLocal<InvitationSettingsRow | null>(`bizinvite.inv.${userId}`, null);
+    const local = readLocal<InvitationSettingsRow | null>(`skatiminvitation.inv.${userId}`, null);
     return { row: local ? normalizeInvitationRow(local) : null, source: "local" };
   } catch (e: any) {
-    const local = readLocal<InvitationSettingsRow | null>(`bizinvite.inv.${userId}`, null);
+    const local = readLocal<InvitationSettingsRow | null>(`skatiminvitation.inv.${userId}`, null);
     return { row: local ? normalizeInvitationRow(local) : null, source: "local", error: e?.message || String(e) };
   }
 }
@@ -177,13 +172,13 @@ export async function saveMyInvitation(userId: string, row: Partial<InvitationSe
     const { data, error } = await q;
     if (error) throw error;
     const out = normalizeInvitationRow(data as any);
-    writeLocal(`bizinvite.inv.${userId}`, out);
+    writeLocal(`skatiminvitation.inv.${userId}`, out);
     return { row: out, source: "supabase" };
   } catch (e: any) {
     const local: InvitationSettingsRow = normalizeInvitationRow({
       id: row.id || `local-${userId}`, user_id: userId, slug: payload.slug, theme_id: payload.theme_id, status: payload.status, title: payload.title, settings: payload.settings, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
     } as any);
-    writeLocal(`bizinvite.inv.${userId}`, local);
+    writeLocal(`skatiminvitation.inv.${userId}`, local);
     return { row: local, source: "local", error: e?.message || String(e) };
   }
 }
@@ -231,4 +226,29 @@ export async function fetchPublishedInvitation(slug: string): Promise<{ row: Inv
   } catch (e: any) {
     return { row: null, error: e?.message || String(e) };
   }
+}
+
+export async function deleteWish(id: string): Promise<{ ok: boolean; error?: string }> {
+  const { error } = await supabase.from("wishes").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+export async function deleteProfile(id: string): Promise<{ ok: boolean; error?: string }> {
+  // Hapus profil/akun pendaftar (admin). Data auth.users terkait tidak dihapus dari client; profil/invitation (cascade) dihapus.
+  const { error } = await supabase.from("profiles").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+export async function fetchAdminWa(): Promise<string> {
+  try {
+    const { data, error } = await supabase.from("app_settings").select("value").eq("key", "admin_wa").maybeSingle();
+    if (!error && data?.value && typeof (data.value as any).number === "string") return (data.value as any).number;
+  } catch {}
+  return "6281234567890";
+}
+export async function saveAdminWa(number: string): Promise<{ ok: boolean; error?: string }> {
+  const n = (number || "").replace(/\D+/g, "").replace(/^0/, "62");
+  const { error } = await supabase.from("app_settings").upsert({ key: "admin_wa", value: { number: n } }, { onConflict: "key" });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
 }

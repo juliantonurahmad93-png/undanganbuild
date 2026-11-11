@@ -1,5 +1,5 @@
--- Biz Invite — schema aman & terstruktur (Supabase Auth + RLS)
--- Jalankan di Supabase Dashboard → SQL Editor.
+﻿-- Skatim Invitation â€” schema aman & terstruktur (Supabase Auth + RLS)
+-- Jalankan di Supabase Dashboard â†’ SQL Editor.
 -- Catatan: kebijakan admin menggunakan JWT (email/app_metadata/role claim), BUKAN subquery ke profiles,
 -- untuk menghindari recursion RLS.
 
@@ -60,8 +60,13 @@ alter table public.wishes add column if not exists invitation_id uuid;
 alter table public.wishes enable row level security;
 drop policy if exists "wishes_read_all" on public.wishes;
 drop policy if exists "wishes_insert_all" on public.wishes;
+drop policy if exists "wishes_delete_admin" on public.wishes;
+drop policy if exists "wishes_delete_owner" on public.wishes;
 create policy "wishes_read_all" on public.wishes for select to anon, authenticated using (true);
 create policy "wishes_insert_all" on public.wishes for insert to anon, authenticated with check (true);
+create policy "wishes_delete_admin" on public.wishes for delete to authenticated using (public.is_admin());
+create policy "wishes_delete_owner" on public.wishes for delete to authenticated
+  using (exists (select 1 from public.invitation_settings i where i.id = wishes.invitation_id and i.user_id = auth.uid()));
 
 do $$
 begin
@@ -71,24 +76,6 @@ begin
 exception when undefined_object then null;
 end $$;
 
--- ========== Leads ==========
-create table if not exists public.leads (
-  id           uuid primary key default gen_random_uuid(),
-  created_at   timestamptz not null default now(),
-  couple_names text not null,
-  whatsapp     text,
-  email        text not null,
-  plan         text,
-  akad_month   text,
-  theme        text,
-  subdomain    text
-);
-alter table public.leads add column if not exists subdomain text;
-alter table public.leads enable row level security;
-drop policy if exists "leads_insert_all" on public.leads;
-drop policy if exists "leads_read_admin" on public.leads;
-create policy "leads_insert_all" on public.leads for insert to anon, authenticated with check (true);
-create policy "leads_read_admin" on public.leads for select to authenticated using (public.is_admin());
 
 -- ========== Profiles + approval ==========
 create table if not exists public.profiles (
@@ -130,6 +117,7 @@ create policy "profiles_insert_own" on public.profiles for insert to authenticat
   with check (auth.uid() = id and role = 'user' and status = 'pending');
 create policy "profiles_admin_select" on public.profiles for select to authenticated using (public.is_admin());
 create policy "profiles_admin_update" on public.profiles for update to authenticated using (public.is_admin()) with check (true);
+create policy "profiles_admin_delete" on public.profiles for delete to authenticated using (public.is_admin());
 
 -- ========== Invitation Settings (terstruktur) ==========
 -- Satu user bisa punya beberapa undangan; `settings` JSONB menyimpan struktur section terstandar.
@@ -211,7 +199,7 @@ begin
   if not v_is_admin and v_slug is not null then
     insert into public.invitation_settings (user_id, slug, theme_id, status, title, settings)
     values (
-      new.id, v_slug, 'islami-emerald', 'draft', nullif(v_name, '') || ' — Undangan',
+      new.id, v_slug, 'islami-emerald', 'draft', nullif(v_name, '') || ' â€” Undangan',
       jsonb_build_object('general', jsonb_build_object('title', coalesce(nullif(v_name,''), 'Undangan'), 'slug', v_slug, 'themeId', 'islami-emerald', 'status', 'draft', 'timezone', 'Asia/Jakarta', 'language', 'id'))
     )
     on conflict (slug) do nothing;
@@ -294,3 +282,23 @@ set slug = p.subdomain
 from public.profiles p
 where i.user_id = p.id and (i.slug is null or btrim(i.slug) = '') and p.subdomain is not null
   and not exists (select 1 from public.invitation_settings x where x.slug = p.subdomain and x.id <> i.id);
+
+-- ========== App settings (nomor WA admin, dsb) ==========
+create table if not exists public.app_settings (
+  key text primary key,
+  value jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+drop trigger if exists app_settings_updated_at on public.app_settings;
+create trigger app_settings_updated_at before update on public.app_settings
+for each row execute procedure public.set_updated_at();
+alter table public.app_settings enable row level security;
+drop policy if exists "app_settings_read_all_auth" on public.app_settings;
+drop policy if exists "app_settings_read_public_admin_wa" on public.app_settings;
+drop policy if exists "app_settings_admin_write" on public.app_settings;
+create policy "app_settings_read_all_auth" on public.app_settings for select to authenticated using (true);
+create policy "app_settings_read_public_admin_wa" on public.app_settings for select to anon using (key = 'admin_wa');
+create policy "app_settings_admin_write" on public.app_settings for all to authenticated using (public.is_admin()) with check (public.is_admin());
+insert into public.app_settings (key, value)
+values ('admin_wa', jsonb_build_object('number', '6281234567890'))
+on conflict (key) do nothing;

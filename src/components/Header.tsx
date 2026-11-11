@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogIn, Menu, Lock, User, X, LogOut, LayoutDashboard, Settings2 } from "lucide-react";
 import { useUi } from "../lib/ui";
@@ -29,7 +29,7 @@ export function Header() {
       <div className="mx-auto flex h-20 max-w-[1360px] items-center justify-between px-5 md:px-8">
         <button type="button" onClick={() => window.location.hash = ''} className="group flex items-center gap-2.5 text-left">
           <LogoMark className="transition-transform duration-500 group-hover:rotate-6" />
-          <span className="flex flex-col"><span className="font-headline text-[22px] leading-6 tracking-tight text-primary">Biz Invite</span><span className="-mt-0.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-secondary">Digital Invitation Platform</span></span>
+          <span className="flex flex-col"><span className="font-headline text-[22px] leading-6 tracking-tight text-primary">Skatim Invitation</span><span className="-mt-0.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-secondary">Digital Invitation Platform</span></span>
         </button>
         {view === "landing" && <nav className="hidden items-center gap-7 lg:flex">{NAV.map((item) => (<a key={item.href} href={item.href} className={cn("relative text-[13.5px] font-medium tracking-wide transition-colors", active === item.href ? "font-bold text-primary" : "text-on-surface-variant hover:text-on-surface")}>{item.label}<span className={cn("absolute -bottom-2 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-secondary transition-all duration-300", active === item.href ? "w-5 opacity-100" : "w-0 opacity-0")} /></a>))}</nav>}
         <div className="flex items-center gap-2.5">

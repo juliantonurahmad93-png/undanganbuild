@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Modal } from "../ui/Modal";
 import { useUi } from "../../lib/ui";
-import { checkSubdomainAvailable, normalizeSubdomain, signInAccount, signUpAccount, submitLead, getSessionUser, fetchMyProfile } from "../../lib/supabase";
+import { checkSubdomainAvailable, normalizeSubdomain, signInAccount, signUpAccount, getSessionUser, fetchMyProfile } from "../../lib/supabase";
 import { ADMIN_EMAILS } from "../../data/content";
 
 const fieldCls = "w-full rounded-md bg-surface-container-low px-4 py-2.5 text-[14px] text-on-surface outline-none ring-1 ring-transparent transition placeholder:text-outline focus:bg-surface-container-lowest focus:ring-primary/40";
@@ -33,7 +33,7 @@ export function LoginModal() {
   return (
     <Modal open={modal === "login"} onClose={closeModal}>
       <div className="p-7 pb-2 md:p-8 md:pb-2">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Biz Invite</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Skatim Invitation</span>
         <h3 className="mt-0.5 font-headline text-[24px] text-primary">Masuk ke Akun</h3>
         <p className="mt-1 text-[12px] text-on-surface-variant">Login aman via Supabase Auth. Akses setting memerlukan persetujuan admin.</p>
       </div>
@@ -73,22 +73,21 @@ export function RegisterModal() {
     if (!avail.available) { setLoading(false); toast(avail.message || "Alamat link sudah digunakan.", false); return; }
     const reg = await signUpAccount(email, password, couple, slug);
     if (!reg.ok) { setLoading(false); toast(reg.message, false); return; }
-    await submitLead({ couple_names: couple, whatsapp: String(fd.get("whatsapp")), email, plan: registerPreset ?? "Starter", akad_month: String(fd.get("month")), theme: registerPreset ?? null, subdomain: slug });
     setLoading(false);
     if (reg.needsEmailConfirm) {
       toast(`Akun dibuat dengan alamat link "/${slug}". Konfirmasi email masih diperlukan oleh pengaturan Supabase saat ini. Untuk tanpa konfirmasi, matikan Confirm Email di Supabase Auth > Providers > Email.`, false);
     } else {
-      toast(`Pendaftaran berhasil. Alamat link "/${slug}" dikunci untuk akun ini dan menunggu persetujuan admin.`);
+      toast(`Pendaftaran berhasil. Alamat link "/${slug}" dikunci. Silakan chat admin via WhatsApp untuk permohonan persetujuan.`);
     }
     setSubdomain(""); setSubHint(null);
-    form.reset(); setTimeout(closeModal, 1200);
+    form.reset(); setTimeout(() => { closeModal(); window.location.hash = "pending"; }, 1200);
   };
 
   return (
     <Modal open={modal === "register"} onClose={closeModal} maxWidth="max-w-lg">
       <div className="p-7 pb-2 md:p-8 md:pb-2">
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Mulai</span>
-        <h3 className="mt-0.5 font-headline text-[24px] text-primary">Daftar Akun Biz Invite</h3>
+        <h3 className="mt-0.5 font-headline text-[24px] text-primary">Daftar Akun Skatim Invitation</h3>
         <p className="mt-1 text-[12px] text-on-surface-variant">Pendaftaran aman via Supabase Auth. Masukkan alamat link undangan sekarang — hanya bisa dipakai sekali saat daftar dan tidak bisa diganti setelah terdaftar (contoh: domain.com/raka-nanda). Akses setting tetap memerlukan persetujuan admin.</p>
       </div>
       <form onSubmit={submit} className="space-y-3.5 p-7 pt-4 md:p-8 md:pt-4">

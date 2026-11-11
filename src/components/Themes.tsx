@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Eye, Heart } from "lucide-react";
 import { THEME_FILTERS, THEMES, type Theme } from "../data/content";
@@ -25,7 +25,7 @@ export function Themes() {
             Demo Tema untuk Berbagai Acara
           </h2>
           <p className="mt-3 text-[15px] leading-7 text-on-surface-variant">
-            Biz Invite menyediakan tema Islami, Modern, Adat Jawa, Adat Sunda, Adat Lampung, dan pilihan lainnya yang bisa dikembangkan.
+            Skatim Invitation menyediakan tema Islami, Modern, Adat Jawa, Adat Sunda, Adat Lampung, dan pilihan lainnya yang bisa dikembangkan.
           </p>
         </Reveal>
 

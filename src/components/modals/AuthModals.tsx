@@ -49,7 +49,7 @@ export function LoginModal() {
 }
 
 export function RegisterModal() {
-  const { modal, registerPreset, closeModal, openLogin, toast } = useUi();
+  const { modal, registerPreset, closeModal, openLogin, toast, refreshProfile, setView } = useUi();
   const [loading, setLoading] = useState(false);
   const [subdomain, setSubdomain] = useState("");
   const [subHint, setSubHint] = useState<string | null>(null);
@@ -74,14 +74,18 @@ export function RegisterModal() {
     if (!avail.available) { setLoading(false); toast(avail.message || "Alamat link sudah digunakan.", false); return; }
     const reg = await signUpAccount(email, password, couple, slug);
     if (!reg.ok) { setLoading(false); toast(reg.message, false); return; }
+    await refreshProfile();
     setLoading(false);
     if (reg.needsEmailConfirm) {
-      toast(`Akun dibuat dengan alamat link "/${slug}". Konfirmasi email masih diperlukan oleh pengaturan Supabase saat ini. Untuk tanpa konfirmasi, matikan Confirm Email di Supabase Auth > Providers > Email.`, false);
+      toast(`Akun dibuat (/${slug}). Konfirmasi email masih aktif di Supabase — matikan Confirm Email agar bisa langsung masuk & minta persetujuan WA.`, false);
     } else {
-      toast(`Pendaftaran berhasil. Alamat link "/${slug}" dikunci. Silakan chat admin via WhatsApp untuk permohonan persetujuan.`);
+      toast(`Pendaftaran berhasil. Alamat link "/${slug}" dikunci. Silakan kirim permintaan persetujuan via WhatsApp.`);
     }
     setSubdomain(""); setSubHint(null);
-    form.reset(); setTimeout(() => { closeModal(); window.location.hash = "pending"; }, 1200);
+    form.reset();
+    closeModal();
+    setView("pending");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

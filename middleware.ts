@@ -64,11 +64,15 @@ export default async function middleware(request: Request): Promise<Response | v
 
     const settings = row.settings || {};
     const couple = settings?.couple || {};
-    const g = couple?.groom?.name || "";
-    const b = couple?.bride?.name || "";
+    const g = String(couple?.groom?.name || "").trim();
+    const b = String(couple?.bride?.name || "").trim();
     const pair = g && b ? `${g} & ${b}` : g || b || "";
-    const titleText = String(row.title || settings?.general?.title || pair || "Undangan Digital").trim();
-    const descText = String(pair ? `Undangan pernikahan ${pair}. Buka untuk melihat detail acara.` : `Undangan digital ${titleText}.`).trim();
+    const rawTitle = String(settings?.general?.title || row.title || "").trim();
+    const genericTitle = !rawTitle || /^(undangan|invitation)$/i.test(rawTitle) || /^undangan\s*[—-]/i.test(rawTitle);
+    const titleText = pair ? `Undangan ${pair}` : (!genericTitle ? rawTitle : "Undangan Digital");
+    const descText = pair
+      ? `Undangan pernikahan ${pair}. Ketuk untuk membuka detail acara.`
+      : (!genericTitle ? `Buka undangan digital: ${rawTitle}.` : "Buka undangan digital untuk melihat detail acara.");
     const image = settings?.share?.ogImageUrl || settings?.hero?.coverImageUrl || couple?.groom?.photoUrl || couple?.bride?.photoUrl || "/images/venue-masjid.jpg";
     const imageUrl = /^https?:\/\//i.test(String(image)) ? String(image) : new URL(String(image || "/images/venue-masjid.jpg"), url.origin).toString();
     const pageUrl = new URL(url.pathname, url.origin).toString();

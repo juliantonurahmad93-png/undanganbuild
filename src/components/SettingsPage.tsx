@@ -177,6 +177,14 @@ export function SettingsPage() {
                   <UpBtn k="hero-cover" accept="image/*" onUrl={(url) => set("hero", { ...settings.hero, coverImageUrl: url })} label="Upload foto cover" />
                   <p className="mt-1 text-[11px] text-on-surface-variant">Simpan file di server/hosting Anda (tanpa symlink), lalu pakai URL-nya. Supabase hanya menyimpan URL.</p>
                 </Field>
+                <Field label="Gambar preview saat link dibagikan (WhatsApp/OG, opsional)" span>
+                  <input className={inputCls} value={settings.share?.ogImageUrl || ""} onChange={(e) => set("share", { ...(settings.share || { ogImageUrl: "" }), ogImageUrl: e.target.value })} placeholder="https://.../preview-wa.jpg (disarankan 1200x630, publik/HTTPS)" />
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                    <UpBtn k="share-og" accept="image/*" onUrl={(url) => set("share", { ...(settings.share || { ogImageUrl: "" }), ogImageUrl: url })} label="Upload gambar preview" />
+                    {settings.share?.ogImageUrl ? <img src={settings.share.ogImageUrl} alt="Preview share" className="h-14 w-24 rounded object-cover ring-1 ring-outline-variant/30" /> : null}
+                  </div>
+                  <p className="mt-1 text-[11px] text-on-surface-variant">Gambar ini dipakai sebagai preview saat link undangan dibagikan di WhatsApp. Jika kosong, sistem memakai foto cover/mempelai. Berlaku setelah undangan <strong>published</strong> dan deploy (cache WA bisa butuh waktu/link baru).</p>
+                </Field>
                 <Field label="Tema"><select className={inputCls} value={settings.general.themeId} onChange={(e) => set("general", { ...settings.general, themeId: e.target.value })}>{THEMES.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</select></Field>
                 <Field label="Status"><select className={inputCls} value={settings.general.status} onChange={(e) => set("general", { ...settings.general, status: e.target.value as any })}><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></Field>
                 <Field label="Timezone"><input className={inputCls} value={settings.general.timezone} onChange={(e) => set("general", { ...settings.general, timezone: e.target.value })} /></Field>

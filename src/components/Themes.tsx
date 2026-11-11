@@ -17,7 +17,7 @@ export function Themes() {
   };
 
   return (
-    <section id="tema" className="pattern-geom relative w-full bg-surface-container-low py-20">
+    <section id="tema" className="pattern-geom relative w-full scroll-mt-24 bg-surface-container-low py-20">
       <div className="mx-auto max-w-[1360px] px-5 md:px-8">
         <Reveal className="mx-auto mb-10 flex max-w-2xl flex-col items-center text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-secondary">Koleksi Tema</span>

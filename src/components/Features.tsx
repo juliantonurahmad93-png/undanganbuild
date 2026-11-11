@@ -12,7 +12,7 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section id="fitur" className="mx-auto w-full max-w-[1360px] px-5 py-20 md:px-8">
+    <section id="fitur" className="mx-auto w-full max-w-[1360px] scroll-mt-24 px-5 py-20 md:px-8">
       <Reveal className="mx-auto mb-12 max-w-xl text-center">
         <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-secondary">Fitur Skatim Invitation</span>
         <h2 className="mt-2 font-headline text-[32px] font-medium leading-[40px] text-primary md:text-[40px] md:leading-[48px]">Satu platform untuk berbagai gaya undangan</h2>

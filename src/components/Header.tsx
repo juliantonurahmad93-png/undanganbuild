@@ -24,13 +24,19 @@ export function Header() {
 
   const handleSignOut = async () => { await logout(); toast("Anda telah keluar."); };
   const scrollTo = (href: string) => {
+    const doScroll = () => {
+      const el = document.querySelector(href) as HTMLElement | null;
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
     setMenuOpen(false);
-    const doScroll = () => { const el = document.querySelector(href); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
     if (view !== "landing") {
       setView("landing");
       if (window.location.pathname !== "/" && window.location.pathname !== "/index.html") window.history.replaceState({}, "", "/");
-      window.setTimeout(doScroll, 80);
-    } else { doScroll(); }
+      window.setTimeout(doScroll, 350);
+    } else {
+      window.setTimeout(doScroll, 350);
+    }
   };
 
   return (

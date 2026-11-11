@@ -7,7 +7,7 @@ import { cn } from "../utils/cn";
 export function Pricing() {
   const { openRegister } = useUi();
   return (
-    <section id="harga" className="pattern-geom w-full bg-surface-container-low py-20">
+    <section id="harga" className="pattern-geom w-full scroll-mt-24 bg-surface-container-low py-20">
       <div className="mx-auto max-w-[1360px] px-5 md:px-8">
         <Reveal className="mx-auto mb-10 max-w-xl text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-secondary">Paket Harga</span>
